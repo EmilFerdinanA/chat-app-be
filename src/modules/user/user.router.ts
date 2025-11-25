@@ -1,6 +1,6 @@
 import { initServer } from "@ts-rest/express";
-import { userContract } from "./user.contract.ts";
-import { UserModel } from "./user.model.ts";
+import { userContract } from "./user.contract";
+import { UserModel } from "./user.model";
 
 const s = initServer();
 
