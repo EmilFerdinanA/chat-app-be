@@ -20,6 +20,7 @@
   "dependencies": {
     "@ts-rest/core": "^3.52.1",
     "@ts-rest/express": "^3.52.1",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "mongoose": "^9.0.0"
   }
 }
