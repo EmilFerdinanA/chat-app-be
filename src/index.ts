@@ -8,11 +8,19 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import { chatContract } from "./modules/chat/chat.contract";
 import { ChatRouter } from "./modules/chat/chat.router";
+import cors from "cors";
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 const server = createServer(app);
 export const io = new Server(server);
