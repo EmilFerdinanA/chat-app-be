@@ -11,6 +11,8 @@ import { ChatRouter } from "./modules/chat/chat.router";
 import cors from "cors";
 import { authMiddleware } from "./middleware/auth.middleware";
 import cookieParser from "cookie-parser";
+import { openApiDocument } from "./openApi";
+import swaggerUi from "swagger-ui-express";
 
 const app = express();
 const port = 3000;
@@ -34,8 +36,12 @@ io.on("connection", (socket) => {
 
 connectDB();
 
-app.use(authMiddleware);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
+// Raw JSON
+app.get("/openapi.json", (req, res) => res.json(openApiDocument));
+
 createExpressEndpoints(authContract, userRouter, app);
+app.use(authMiddleware);
 createExpressEndpoints(chatContract, ChatRouter, app);
 
 server.listen(port, () => {
