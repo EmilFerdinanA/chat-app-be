@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 const s = initServer();
 
 export const userRouter = s.router(userContract, {
-  register: async ({ body }) => {
+  register: async ({ body, req }) => {
     const exist = await UserModel.findOne({ email: body.email });
 
     if (exist) {
@@ -65,7 +65,7 @@ export const userRouter = s.router(userContract, {
       };
     }
 
-    const token = jwt.sign({ id: user._id, emaiil: user.email }, "test key", {
+    const token = jwt.sign({ id: user._id, email: user.email }, "test key", {
       expiresIn: "7d",
     });
 

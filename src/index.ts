@@ -9,11 +9,14 @@ import { Server } from "socket.io";
 import { chatContract } from "./modules/chat/chat.contract";
 import { ChatRouter } from "./modules/chat/chat.router";
 import cors from "cors";
+import { authMiddleware } from "./middleware/auth.middleware";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(
   cors({
@@ -31,6 +34,7 @@ io.on("connection", (socket) => {
 
 connectDB();
 
+app.use(authMiddleware);
 createExpressEndpoints(userContract, userRouter, app);
 createExpressEndpoints(chatContract, ChatRouter, app);
 
