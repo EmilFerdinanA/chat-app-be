@@ -1,49 +1,42 @@
 import { initServer } from "@ts-rest/express";
 import { userContract } from "./user.contract";
 import { UserModel } from "./user.model";
+import bcrypt from "bcrypt";
 
 const s = initServer();
 
 export const userRouter = s.router(userContract, {
-  getAllUser: async () => {
-    const users = await UserModel.find();
+  register: async ({ body }) => {
+    const exist = await UserModel.findOne({ email: body.email });
 
-    return {
-      status: 200,
-      body: users.map((user) => ({
-        id: user._id.toString(),
-        name: user.name,
-      })),
-    };
-  },
-
-  getUserById: async ({ params }) => {
-    const user = await UserModel.findById(params.id);
-
-    if (!user) {
+    if (exist) {
       return {
-        status: 404,
-        body: { message: "User not found" },
+        status: 400,
+        body: {
+          status: 400,
+          message: "Email already registered",
+        },
       };
     }
 
-    return {
-      status: 200,
-      body: {
-        id: user?._id.toString(),
-        name: user?.name,
-      },
-    };
-  },
+    const hashed = await bcrypt.hash(body.password, 10);
 
-  createUser: async ({ body }) => {
-    const user = await UserModel.create(body);
+    const user = await UserModel.create({
+      name: body.name,
+      email: body.email,
+      password: hashed,
+    });
 
     return {
       status: 201,
       body: {
-        id: user._id.toString(),
-        name: user.name,
+        status: 201,
+        message: "Success create user",
+        data: {
+          id: user._id.toString(),
+          email: user.email,
+          name: user.name,
+        },
       },
     };
   },

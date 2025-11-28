@@ -5,41 +5,32 @@ const c = initContract();
 
 const User = z.object({
   id: z.string(),
+  email: z.string(),
   name: z.string(),
 });
 
-const CreateUserDto = z.object({
-  name: z.string().min(2, "Name is required"),
+const RegisterDto = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+  password: z.string().min(6),
 });
 
 export const userContract = c.router({
-  getAllUser: {
-    method: "GET",
-    path: "/user",
-    responses: {
-      200: z.array(User),
-    },
-    summary: "Get all user",
-  },
-
-  getUserById: {
-    method: "GET",
-    path: "/user/:id",
-    responses: {
-      200: User,
-      404: z.object({ message: z.string() }),
-    },
-    summary: "Get a user",
-  },
-
-  createUser: {
+  register: {
     method: "POST",
-    path: "/user",
-    body: CreateUserDto,
+    path: "/auth/register",
+    body: RegisterDto,
     responses: {
-      201: User,
-      400: z.object({ error: z.string() }),
+      201: z.object({
+        status: z.literal(201),
+        message: z.string(),
+        data: User,
+      }),
+      400: z.object({
+        status: z.literal(400),
+        message: z.string(),
+      }),
     },
-    summary: "Create a user",
+    summary: "Register user",
   },
 });
