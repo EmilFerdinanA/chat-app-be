@@ -2,8 +2,8 @@ import express from "express";
 
 import { connectDB } from "./lib/connectDB";
 import { createExpressEndpoints } from "@ts-rest/express";
-import { userRouter } from "./modules/user/user.router";
-import { userContract } from "./modules/user/user.contract";
+import { userRouter } from "./modules/auth/auth.router";
+import { authContract } from "./modules/auth/auth.contract";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { chatContract } from "./modules/chat/chat.contract";
@@ -35,7 +35,7 @@ io.on("connection", (socket) => {
 connectDB();
 
 app.use(authMiddleware);
-createExpressEndpoints(userContract, userRouter, app);
+createExpressEndpoints(authContract, userRouter, app);
 createExpressEndpoints(chatContract, ChatRouter, app);
 
 server.listen(port, () => {

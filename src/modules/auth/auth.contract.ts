@@ -1,26 +1,11 @@
 import { initContract } from "@ts-rest/core";
 import { z } from "zod";
+import { LoginDto, RegisterDto } from "./auth.dto";
+import { User } from "./auth.dao";
 
 const c = initContract();
 
-const User = z.object({
-  id: z.string(),
-  email: z.string(),
-  name: z.string(),
-});
-
-const RegisterDto = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
-  password: z.string().min(6),
-});
-
-const LoginDto = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-});
-
-export const userContract = c.router({
+export const authContract = c.router({
   register: {
     method: "POST",
     path: "/auth/register",

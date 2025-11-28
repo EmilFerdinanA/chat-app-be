@@ -1,12 +1,12 @@
 import { initServer } from "@ts-rest/express";
-import { userContract } from "./user.contract";
-import { UserModel } from "./user.model";
+import { authContract } from "./auth.contract";
+import { UserModel } from "./auth.model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const s = initServer();
 
-export const userRouter = s.router(userContract, {
+export const userRouter = s.router(authContract, {
   register: async ({ body, req }) => {
     const exist = await UserModel.findOne({ email: body.email });
 
