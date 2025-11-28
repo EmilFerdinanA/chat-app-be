@@ -15,6 +15,11 @@ const RegisterDto = z.object({
   password: z.string().min(6),
 });
 
+const LoginDto = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+
 export const userContract = c.router({
   register: {
     method: "POST",
@@ -32,5 +37,26 @@ export const userContract = c.router({
       }),
     },
     summary: "Register user",
+  },
+
+  login: {
+    method: "POST",
+    path: "/auth/login",
+    body: LoginDto,
+    responses: {
+      200: z.object({
+        status: z.literal(200),
+        message: z.string(),
+        data: z.object({
+          token: z.string(),
+          user: User,
+        }),
+      }),
+      401: z.object({
+        status: z.literal(401),
+        message: z.string(),
+      }),
+    },
+    summary: "Login user",
   },
 });
